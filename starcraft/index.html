@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>starcraft<</title>
+</head>
+<body>
+  <img id="cloaking" src="cloaking.png" alt="클로킹 버튼" />
+  <img id="wraith" src="wraith.png" alt="레이스" />
+<script>
+function fadeOutEffect() {
+  var fadeTarget = document.querySelector("#wraith");
+  var fadeEffect = setInterval(function () {
+      if (!fadeTarget.style.opacity) {
+          fadeTarget.style.opacity = 1;
+      }
+      if (fadeTarget.style.opacity > 0) {
+          fadeTarget.style.opacity -= 0.1;
+      } else {
+          clearInterval(fadeEffect);
+      }
+  }, 200);
+}
+
+document.querySelector("#cloaking").addEventListener('click', fadeOutEffect);
+</script>
+</body>
+</html>
