@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>인공지능 과일상 테스트</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="header">
+    <h1>과일상 테스트</h1>
+    <h3>얼굴로 보는 인공지능 과일상 테스트</h3>
+  </div>
+  <div class="container">
+    <div id="upload-area" class="area">
+      <span class="guide-image">📸</span>
+      <br />
+      <span>사진을 올려놓거나 눌러서 업로드해주세요!</span>
+      <input id="upload-input" style="display: none;" type="file" accept="image/*" onchange="readFile(this.files[0]);" />
+    </div>
+    <div id="loading-area" class="area" style="display: none;">
+      <span class="guide-image">🌹😉</span>
+      <br />
+      <span>인공지능 모델을 불러오는 중입니다...</span>
+    </div>
+    <div id="result-area" class="area" style="display: none;">
+      <img id="upload-image" src="#" alt="youra image" />
+      <div id='label-container'></div>
+    </div>
+    <div id="retry-area" class="area" style="display: none;">
+      <span>다른 사진으로 테스트하려면 눌러주세요!</span>
+    </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+  <script type="text/javascript">
+
+    const URL = "https://teachablemachine.withgoogle.com/models/L70E2v9g3/";
+
+    let model, webcam, labelContainer, maxPredictions;
+    let isModelReady = false;
+    let input = document.getElementById("upload-input");
+    let image = document.getElementById("upload-image");
+    let loadingArea = document.getElementById("loading-area");
+    let uploadArea = document.getElementById("upload-area")
+    let resultArea = document.getElementById("result-area");
+    let retryArea = document.getElementById("retry-area");
+    const reader = new FileReader();
+
+    async function readFile(file) {
+      uploadArea.style.display = "none";
+      if(isModelReady === false) {
+        loadingArea.style.display = "block";
+        await init()
+      }
+      reader.readAsDataURL(file);
+    }
+
+    reader.onload = async function(event) {
+      await image.setAttribute('src', event.target.result);
+      await predict();
+      loadingArea.style.display = "none";
+      resultArea.style.display = "block";
+      retryArea.style.display = "block";
+    };
+
+    uploadArea.onclick = function() {
+      input.click();        
+    }
+
+    uploadArea.ondragover = function(event) {
+      event.preventDefault();        
+    }
+
+    uploadArea.ondrop = function(event) {
+      event.preventDefault();
+      const file = event.dataTransfer.files[0];
+      readFile(file);
+    }
+
+    retryArea.onclick = function() {
+      retryArea.style.display = "none";
+      resultArea.style.display = "none";
+      uploadArea.style.display = "block";
+      input.value = "";
+    }
+
+    async function init() {
+      const modelURL = URL + "model.json";
+      const metadataURL = URL + "metadata.json";
+
+      model = await tmImage.load(modelURL, metadataURL);
+      maxPredictions = model.getTotalClasses();
+
+      labelContainer = document.getElementById("label-container");
+      for (let i = 0; i < maxPredictions + 1; i++) { 
+            labelContainer.appendChild(document.createElement("div"));
+      }
+    }
+
+    async function predict() {
+      const prediction = await model.predict(image);
+      prediction.sort((x, y) => y.probability - x.probability);
+
+      switch (prediction[0].className) {
+        case "멜론":
+          labelContainer.childNodes[0].innerHTML = `<h3>당신은 멜론상!</h3>
+                <p>당신은 겉으로는 상당히 다소곳해 보이는 타입이지만 마음속에는 언제나 큰 포부나 이상을 품고 있는 사람입니다.
+        남이 하자는 대로 따라가기 싫어하며, 자기 나름대로의 이상이나 신념을 위해 살고자 노력하는 당신!
+        이런 점들 때문에 다소 완고하다는 얘기를 듣기도 하네요, 금전적인 욕구 역시 누구보다 강하고 돈을 많이 모으려는 욕망이 마음속에 크게 자리 잡고 있네요. 
+        또, 재테크 분야에 상당한 능력을 가지고 있습니다. 누구에게 지는 것을 매우 싫어하고 모든 일에 최고가 되길 꿈꾸는 야심가 타입!</p>`;
+          break;
+        case "사과":
+          labelContainer.childNodes[0].innerHTML = `<h3>당신은 사과상!</h3>
+                <p>당신은 모든 일들을 정확하게 처리해야 직성이 풀리는 성실한 성격의 소유자입니다.
+즉, 절대로 무리해서 일을 처리하지 않고 적당한 시간을 두고 꼼꼼하게 체크하는 타입입니다. 
+어떤 과제가 주어졌을 때 밤을 지새우며 하기보다는 일정한 시간은 쉬고 일정한 시간에 집중해서 과제를 완성해냅니다. 
+웃어른은 공경하고 예의 바른 당신, 예의나 매너에 민감해서 그것에 어긋나는 사람들을 굉장히 싫어합니다.
+특히 붉은 사과를 좋아하는 사람은 대인관계에 세심한 신경을 쓰며 고지식하다는 이야기를 자주 듣고는 합니다.</p>`;
+          break;
+        case "복숭아":
+          labelContainer.childNodes[0].innerHTML = `<h3>당신은 복숭아상!</h3>
+                <p>당신은 대체로 온화한 성격을 가졌고 누구와도 원만한 인간관계를 유지합니다.
+다소 언짢은 일이 있어도 항상 얼굴에는 미소가 떠나지 않는 당신, 이러한 성격 때문에 주위 사람들에게 항상 평이 좋고 절대 남에게 미움을 받지 않는 스타일입니다.
+또한 매우 가정적이어서 집안일에 충실하며 그것을 즐기는 당신, 다양한 모임의 시간을 즐기고 그 안에서 에너지를 충전하는군요? 
+하지만 때로는 너무 사람이 좋아 보여 손해를 보는 경우도 종종 있으니 주의하세요!</p>`;
+          break;
+        case "체리":
+          labelContainer.childNodes[0].innerHTML = `<h3>당신은 체리상!</h3>
+                <p>당신은 정열적인 스타일로 늘 가슴속에 무엇인가 불타고 있는 꿈이 거창한 스타일입니다.
+스릴이나 변화를 좋아해 틀에 박힌 듯한 삶 속에서의 권태를 거부하며, 무엇이든지 한번 시작한 일은 열심히 최선을 다하는 적극적인 타입의 당신! 
+그리고 당신은 약간 사람을 자신만의 기준을 정해 가리면서 사귀는 경향이 있으며, 첫인상 만으로 어떤 사람을 평가하는 일이 종종 있네요! 
+하지만 당신의 장점은 목표한 일이 어려움에 부딪히더라도 포기 않고 과감하게 밀고 나가는 추진력과 열정에 있습니다.</p>`;
+          break;
+        case "포도":
+          labelContainer.childNodes[0].innerHTML = `<h3>당신은 포도상!</h3>
+                <p>당신은 외로움을 많이 타며, 자신의 테두리 속에서 나오기를 꺼려합니다.
+반면 미적 감각이나 상상력, 창의력은 누구보다도 풍부하며 이를 바탕으로 자신만의 독특한 개성을 발전시켜 나아갑니다. 
+당신은 남들이 가까이하기 어려워하는 차가운 면을 가지고 있지만 마음은 정말 따뜻한 반전 매력을 가지고 있습니다. 
+겉으로 보이는 행동과 본심이 크게 차이나는 타입으로 당신을 점차 알아가는 사람들은 이러한 당신의 매력에 빠지고 마는데요! 
+상대방과 관계를 맺어나가는데 꽤 오랜 시간이 걸리지만 일단 친해지게 되면 자신의 모든 것을 주려고 하는 스타일입니다.</p>`;
+          break;
+      }
+      for (let i = 0; i < maxPredictions; i++) {
+        const classPrediction =
+        prediction[i].className + ": " + Math.round(prediction[i].probability * 100) + "%";
+        labelContainer.childNodes[i+1].innerHTML = classPrediction;
+      }
+      isModelReady = true;
+    }
+  </script>
+</body>
+</html>

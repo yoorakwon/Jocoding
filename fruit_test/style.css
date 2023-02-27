@@ -1,0 +1,80 @@
+/* 웹 폰트 불러오기  */
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+
+/* 문서 전체의 기본이 되는 body 영역에 스타일 적용 */
+body {
+  padding: 0; /* 내부 여백 제거 */
+  margin: 0; /* 외부 여백 제거 */
+  font-family: 'Do Hyeon', sans-serif; /* 폰트 적용 */
+  color: #35465d; /* 텍스트 색상 적용 */
+}
+
+/* 상단 해더영역 스타일 적용 */
+.header {
+  padding: 10px 0; /* 상하단 내부 여백 추가 */
+  background-color: white; /* 배경 색상 추가 */
+}
+
+/* h1 태그(제목), h3 태그(부제목) 스타일 적용 */
+h1, h3 {
+  margin-top: 0; /* 상단 외부 여백 제거 */
+  margin-bottom: 10px; /* 하단 외부 여백 추가 */
+  text-align: center; /* 텍스트 가운데 정렬 적용 */
+}
+
+/* 중간 컨텐츠 영역 스타일 적용 */
+.container {
+  background-color: #f6f7fa; /* 배경 색상 적용 */
+  display: flex; /* flex 디스플레이 적용 */
+  flex-direction: column; /* flex 디스플레이 방향 적용 */
+  justify-content: center; /* 영역 내부 가운데 정렬 적용(flex 디스플레이) */
+  align-items: center; /* 영역 내부 가운데 정렬 적용(flex 디스플레이) */
+  min-width: 350px; /* 최소 넓이 지정 */
+  max-width: 650px; /* 최대 넓이 지정 */
+  min-height: 400px; /* 최소 높이 지정 */
+  padding: 20px 0; /* 상하단 내부 여백 적용 */
+  margin: 0 auto; /* 중간 컨텐츠 영역의 body 태그 내 가로 가운데 정렬 적용 */
+  border: 1px solid lightgrey; /* 실선 테두리 적용 */
+  border-radius: 10px; /* 원형 테두리 적용 */
+}
+
+/* 내부 area 영역 공통 스타일 적용 */
+.area {
+  background-color: white; /* 배경 색상 적용 */
+  width: 60%; /* 넓이 지정 */
+  min-width: 300px; /* 최소 넓이 지정 */
+  max-width: 600px; /* 최대 넓이 지정 */
+  border: 2px dashed steelblue; /* 점선 테두리 적용 */
+  border-radius: 10px; /* 원형 테두리 적용 */
+  margin: 0 auto; /* 내부 area 영역의 container div 태그 내 가로 가운데 정렬 적용 */
+  padding: 20px; /* 내부 여백 적용 */
+  text-align: center; /* 텍스트 가운데 정렬 적용 */
+}
+
+/* 파일 업로드 영역 스타일 적용 */
+#upload-area {
+  cursor: pointer; /* 해당 영역에 마우스 올릴 경우 손가락 모양 마우스 커서로 표시 적용 */
+}
+
+/* 재선택 영역 스타일 적용 */
+#retry-area {
+  cursor: pointer; /* 해당 영역에 마우스 올릴 경우 손가락 모양 마우스 커서로 표시 적용 */
+  margin-top: 20px; /* 상단 외부 여백 적용 */
+}
+
+/* 파일 업로드 영역, 재선택 영역 마우스 오버 시, 스타일 적용 */
+#upload-area:hover,
+#retry-area:hover {
+  background-color: aliceblue; /* 배경 색상 적용 */
+}
+
+/* area 내부의 이모지(카메라, 로딩) 스타일 적용 */
+.guide-image {
+  font-size: 120px; /* 폰트 사이즈 적용 - 이모지는 텍스트로 취급됨 */
+}
+
+/* img 태그 스타일 적용 */
+#upload-image {
+  width: 55%; /* 넓이 지정 */
+  max-width: 540px; /* 최대 넓이 지정 */
+}
